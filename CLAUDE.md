@@ -1,3 +1,4 @@
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -13,13 +14,12 @@ npm run preview  # Preview production build
 
 ## Architecture
 
-This is a single-file React app — all logic lives in `src/App.jsx` with styles in `src/App.css`.
+React + Vite app. All styles are in `src/App.css`.
 
-**State** (all in `App` component):
-- `transactions` — array of `{ id, description, amount, type, category, date }`. Note: `amount` is stored as a string, which causes a known bug where string concatenation is used instead of numeric addition in the income/expense totals.
-- Form state: `description`, `amount`, `type`, `category`
-- Filter state: `filterType`, `filterCategory`
+**Component tree:**
+- `App` — holds `transactions` state and `handleAdd`. Passes data down to children.
+  - `Summary` — receives `transactions`, computes totalIncome, totalExpenses, and balance internally.
+  - `TransactionForm` — owns its own form state (`description`, `amount`, `type`, `category`). Calls `onAdd` prop with a new transaction object on submit. Converts `amount` to a float before passing up.
+  - `TransactionList` — receives `transactions`, owns filter state (`filterType`, `filterCategory`) internally.
 
-**Known bug:** `amount` values are strings, so `reduce((sum, t) => sum + t.amount, 0)` concatenates instead of adding — totals and balance are incorrect.
-
-**Data flow:** No persistence — state is in-memory only and resets on page reload. Seed data is hardcoded in the initial `useState` call.
+**Data flow:** No persistence — state is in-memory only and resets on page reload. Seed data is hardcoded in `App`'s initial `useState` call. `amount` is stored as a number.
