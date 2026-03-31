@@ -1,4 +1,6 @@
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const COLORS = ['#6366f1', '#f59e0b', '#10b981', '#ef4444', '#3b82f6', '#ec4899', '#8b5cf6', '#14b8a6'];
 
 export default function SpendingChart({ transactions }) {
   const expensesByCategory = transactions
@@ -24,7 +26,11 @@ export default function SpendingChart({ transactions }) {
           <XAxis dataKey="name" tick={{ fontSize: 12 }} />
           <YAxis tickFormatter={(v) => `$${v}`} tick={{ fontSize: 12 }} />
           <Tooltip formatter={(value) => [`$${value.toFixed(2)}`, 'Amount']} />
-          <Bar dataKey="value" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+            {data.map((_, index) => (
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
